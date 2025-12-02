@@ -22,5 +22,4 @@ public class PhongVatLy {
 
     @Column(name = "LoaiPhong")
     private String loaiPhong;
-
 }

@@ -17,34 +17,47 @@ public class LichTrucNgay {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer maLichTruc;
 
+    public Integer getMaLichTruc() {
+        return maLichTruc;
+    }
+
+    // NV
     @ManyToOne
     @JoinColumn(name = "MaNhanVien")
     private NhanVien nhanVien;
 
+    // Ca + Phòng (ID)
+    @Column(name = "MaCa")
     private Integer maCa;
+
+    @Column(name = "MaPhong")
     private Integer maPhong;
 
     private LocalDate ngayTruc;
-
     private String trangThai;
     private String ghiChu;
 
     // ==========================
-    //  THÊM CHO MAPPER
+    //  Quan hệ ManyToOne
     // ==========================
 
-    // 1) Getter trả về ID nhân viên (mapper yêu cầu)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaCa", insertable = false, updatable = false)
+    private CaLamViec caLamViec;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaPhong", insertable = false, updatable = false)
+    private PhongVatLy phongVatLy;
+
+    // ==========================
+    //  SUPPORT CHO MAPPER
+    // ==========================
+
     public Integer getMaNhanVien() {
         return nhanVien != null ? nhanVien.getMaNhanVien() : null;
+
+
     }
 
-    // 2) Quan hệ ManyToOne với CaLamViec
-    @ManyToOne
-    @JoinColumn(name = "MaCa", insertable = false, updatable = false)
-    private CaLamViec ca;
-
-    // 3) Quan hệ ManyToOne với PhongVatLy
-    @ManyToOne
-    @JoinColumn(name = "MaPhong", insertable = false, updatable = false)
-    private PhongVatLy phong;
 }
+
