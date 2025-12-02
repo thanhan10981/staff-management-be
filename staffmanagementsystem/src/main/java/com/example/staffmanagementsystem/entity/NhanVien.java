@@ -72,4 +72,6 @@ public class NhanVien {
 
     @Column(name = "HopDongFile")
     private String hopDongFile;
+
+
 }
