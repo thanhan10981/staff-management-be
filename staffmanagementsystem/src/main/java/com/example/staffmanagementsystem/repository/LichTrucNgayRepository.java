@@ -1,29 +1,52 @@
 package com.example.staffmanagementsystem.repository;
 
 import com.example.staffmanagementsystem.entity.LichTrucNgay;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 public interface LichTrucNgayRepository extends JpaRepository<LichTrucNgay, Integer> {
 
-    List<LichTrucNgay> findByNgayTrucBetween(LocalDate start, LocalDate end);
+    List<LichTrucNgay> findByNgayTruc(LocalDate date);
 
-    List<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTruc(Integer maNhanVien, LocalDate ngayTruc);
+    List<LichTrucNgay> findByNgayTrucBetween(LocalDate from, LocalDate to);
 
-    List<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTrucBetween(Integer maNhanVien, LocalDate start, LocalDate end);
+    List<LichTrucNgay> findByNhanVien_MaNhanVien(Integer maNV);
 
-    List<LichTrucNgay> findByNgayTruc(LocalDate ngayTruc);
+    List<LichTrucNgay> findByMaPhongAndNgayTrucBetween(Integer maPhong, LocalDate from, LocalDate to);
 
-    // Nếu vẫn muốn giữ tên này:
-    @Query("SELECT l FROM LichTrucNgay l WHERE l.nhanVien.maNhanVien = :id AND l.ngayTruc = :day")
-    List<LichTrucNgay> findByEmpAndDate(@Param("id") Integer id, @Param("day") LocalDate day);
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM LichTrucNgay l WHERE l.nhanVien.maNhanVien = :id")
-    void deleteByNhanVienId(@Param("id") Integer id);
+    List<LichTrucNgay> findByMaPhongAndMaCaAndNgayTruc(Integer maPhong, Integer maCa, LocalDate date);
+
+    // KHỚP YÊU CẦU: Lấy theo khoa (qua phòng → khoa)
+    List<LichTrucNgay> findByPhongVatLy_Khoa_IdAndNgayTrucBetween(
+            Integer id,
+            LocalDate start,
+            LocalDate end
+    );
+
+
+    List<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTrucBetween(Integer maNV, LocalDate start, LocalDate end);
+
+    @Query("""
+        SELECT l.maCa AS ca, COUNT(l) AS soNguoi
+        FROM LichTrucNgay l
+        WHERE l.ngayTruc = :date
+          AND l.phongVatLy.khoa.id = :maKhoa
+        GROUP BY l.maCa
+        ORDER BY l.maCa
+    """)
+    List<Map<String, Object>> countByNgayAndKhoa(
+            @Param("maKhoa") Integer maKhoa,
+            @Param("date") LocalDate date
+    );
+
+    boolean existsByNhanVien_MaNhanVienAndNgayTruc(Integer maNV, LocalDate date);
+
+
+
+
 }

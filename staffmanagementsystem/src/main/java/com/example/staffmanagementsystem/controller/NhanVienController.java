@@ -5,11 +5,8 @@ import com.example.staffmanagementsystem.service.NhanVienService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/NhanVien")
@@ -45,17 +42,8 @@ public class NhanVienController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable Integer id) {
         service.delete(id);
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("status", "success");
-        res.put("message", "Deleted");
-
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok("Deleted");
     }
 
-    @PostMapping("/import-excel")
-    public ResponseEntity<?> importExcel(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(service.importExcel(file));
-    }
 
 }
