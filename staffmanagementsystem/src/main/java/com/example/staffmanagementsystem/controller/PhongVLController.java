@@ -1,7 +1,7 @@
 package com.example.staffmanagementsystem.controller;
 
-import com.example.staffmanagementsystem.dto.PhongBanDTO;
-import com.example.staffmanagementsystem.service.impl.PhongBanService;
+import com.example.staffmanagementsystem.dto.PhongVatLyDTO;
+import com.example.staffmanagementsystem.service.PhongVLService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/phongban")
+@RequestMapping("/api/phong")
 @RequiredArgsConstructor
-public class PhongBanController {
+public class PhongVLController {
 
-    private final PhongBanService phongBanService;
+    private final PhongVLService phongService;
 
     @GetMapping("/khoa/{maKhoa}")
-    public ResponseEntity<List<PhongBanDTO>> getPhongBanTheoKhoa(
+    public ResponseEntity<List<PhongVatLyDTO>> getPhongTheoKhoa(
             @PathVariable int maKhoa
     ) {
-        return ResponseEntity.ok(phongBanService.getPhongBanTheoKhoa(maKhoa));
+        return ResponseEntity.ok(phongService.getPhongTheoKhoa(maKhoa));
     }
 }

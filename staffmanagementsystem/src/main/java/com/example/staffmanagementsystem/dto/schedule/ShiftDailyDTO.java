@@ -1,18 +1,19 @@
 package com.example.staffmanagementsystem.dto.schedule;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShiftDto {
-    private Integer maLichTruc;
+public class ShiftDailyDTO {
     private Integer maNhanVien;
     private String tenNhanVien;
     private Integer maCa;
     private String tenCa;
-    private Integer maPhong;
-    private String tenPhong;
-    private String trangThai;
+    private String gioBatDau;
+    private String gioKetThuc;
 }
-

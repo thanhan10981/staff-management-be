@@ -1,9 +1,7 @@
 package com.example.staffmanagementsystem.service.impl;
 
 import com.example.staffmanagementsystem.dto.PhongBanDTO;
-import com.example.staffmanagementsystem.mapper.PhongBanMapper;
 import com.example.staffmanagementsystem.repository.PhongBanRepository;
-import com.example.staffmanagementsystem.service.PhongBanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +12,14 @@ import java.util.List;
 public class PhongBanServiceImpl implements PhongBanService {
 
     private final PhongBanRepository repo;
-    private final PhongBanMapper mapper;
 
     @Override
-    public List<PhongBanDTO> getAll() {
-        return repo.findAll()
+    public List<PhongBanDTO> getPhongBanTheoKhoa(int maKhoa) {
+        return repo.findByKhoa_Id(maKhoa)
                 .stream()
-                .map(mapper::toDto)
+                .map(PhongBanDTO::fromEntity)
                 .toList();
     }
-}
 
+
+}
