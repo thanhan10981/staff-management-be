@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 public class LichTrucNgayMapper {
 
     public LichTrucNgayDTO toDTO(LichTrucNgay e) {
+
         if (e == null) return null;
 
         return LichTrucNgayDTO.builder()
                 .maLichTruc(e.getMaLichTruc())
-                .maNhanVien(e.getNhanVien().getMaNhanVien())
-                .hoTen(e.getNhanVien().getTenNhanVien())
+                .maNhanVien(e.getMaNhanVien())
+                .hoTen(e.getNhanVien() != null ? e.getNhanVien().getTenNhanVien() : null)
                 .maCa(e.getMaCa())
                 .maPhong(e.getMaPhong())
                 .ngayTruc(e.getNgayTruc())

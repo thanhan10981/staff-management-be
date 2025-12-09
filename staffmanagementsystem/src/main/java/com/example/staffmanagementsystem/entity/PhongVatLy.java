@@ -22,4 +22,7 @@ public class PhongVatLy {
 
     @Column(name = "LoaiPhong")
     private String loaiPhong;
+    @ManyToOne
+    @JoinColumn(name = "MaKhoa")
+    private Khoa khoa;
 }

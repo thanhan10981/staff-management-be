@@ -2,8 +2,11 @@ package com.example.staffmanagementsystem.controller;
 
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
 import com.example.staffmanagementsystem.dto.PhanCongCaTrucDTO;
+import com.example.staffmanagementsystem.dto.schedule.PhanCongTheoDotDTO;
+import com.example.staffmanagementsystem.entity.LichTrucNgay;
 import com.example.staffmanagementsystem.service.LichTrucService;
 import com.example.staffmanagementsystem.service.PhanCongCaTrucService;
+import com.example.staffmanagementsystem.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +33,9 @@ public class PhanCongController {
             @RequestParam Integer maKhoa,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start
     ) {
-        lichTrucService.taoPhanCongTuan(maNV, maPhong, maKhoa, start);
+        Integer actorId = SecurityUtils.getCurrentUserId();
+
+        lichTrucService.taoPhanCongTuan(maNV, maPhong, maKhoa, start, actorId);
         return ResponseEntity.ok("Tạo phân công + lịch trực thành công!");
     }
 
@@ -69,4 +74,11 @@ public class PhanCongController {
     ) {
         return ResponseEntity.ok(lichTrucService.getLichTheoTuan(maNV, start, end));
     }
+
+    @PostMapping("/create-with-lich")
+    public ResponseEntity<?> taoPhanCongVaLich(@RequestBody PhanCongTheoDotDTO dto) {
+        phanCongCaTrucService.taoPhanCongVaSinhLich(dto);
+        return ResponseEntity.ok("Created successfully");
+    }
+
 }

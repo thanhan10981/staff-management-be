@@ -47,12 +47,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             quyenList.forEach(q -> authorities.add(new SimpleGrantedAuthority(q.getTenQuyen())));
         }
 
-        return new org.springframework.security.core.userdetails.User(
+        return new CustomUserDetails(
+                user.getMaNguoiDung(),
                 user.getTenDangNhap(),
                 user.getMatKhauHash(),
-                true, true, true, true,
                 authorities
         );
+
     }
 
 }
