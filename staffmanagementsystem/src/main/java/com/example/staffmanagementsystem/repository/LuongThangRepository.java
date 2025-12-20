@@ -44,4 +44,35 @@ public interface LuongThangRepository extends JpaRepository<LuongThang, Integer>
     @Transactional
     @Query("DELETE FROM LuongThang l WHERE l.nhanVien.maNhanVien = :id")
     void deleteByNhanVienId(@Param("id") Integer id);
+    // ✅ LẤY THÁNG/NĂM MỚI NHẤT
+    @Query(
+            value = """
+        SELECT TOP 1 Thang, Nam
+        FROM LuongThang
+        ORDER BY Nam DESC, Thang DESC
+    """,
+            nativeQuery = true
+    )
+    List<Object[]> findLatestMonthYear();
+
+
+
+
+    @Query(
+            value = """
+        SELECT
+            COALESCE(SUM(LuongCoBan),0),
+            COALESCE(SUM(PhuCapCoDinh + PhuCapTrucCa + PhuCapKhac),0),
+            COALESCE(SUM(BHXH),0),
+            COALESCE(SUM(ThueTNCN),0),
+            COALESCE(SUM(ThucLanh),0)
+        FROM LuongThang
+        WHERE Thang = :thang
+          AND Nam   = :nam
+    """,
+            nativeQuery = true
+    )
+    List<Object[]> tongHopLuongTheoThang(int thang, int nam);
+
+
 }
