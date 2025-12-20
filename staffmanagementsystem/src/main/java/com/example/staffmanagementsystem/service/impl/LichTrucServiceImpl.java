@@ -1,16 +1,14 @@
 package com.example.staffmanagementsystem.service.impl;
-
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
+import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
 import com.example.staffmanagementsystem.entity.*;
 import com.example.staffmanagementsystem.mapper.LichTrucNgayMapper;
 import com.example.staffmanagementsystem.repository.*;
 import com.example.staffmanagementsystem.service.LichTrucService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -287,5 +285,107 @@ public class LichTrucServiceImpl implements LichTrucService {
                 .filter(list -> list.stream().map(LichTrucNgayDTO::getMaCa).distinct().count() > 1)
                 .count();
     }
+
+    @Override
+    public List<LichTrucTuanDTO> getBangLichTuanTheoKhoa(
+            Integer maKhoa,
+            LocalDate start,
+            LocalDate end
+    ) {
+
+        // ✅ KHAI BÁO BIẾN list
+        List<LichTrucNgay> list;
+
+        // ✅ nếu maKhoa = null hoặc = 0 → lấy tất cả
+        if (maKhoa == null || maKhoa == 0) {
+            list = lichRepo.findByNgayTrucBetween(start, end);
+        } else {
+            list = lichRepo.findByNhanVien_Khoa_IdAndNgayTrucBetween(
+                    maKhoa, start, end
+            );
+        }
+
+        Map<Integer, LichTrucTuanDTO> map = new LinkedHashMap<>();
+
+        for (LichTrucNgay l : list) {
+
+            if (l.getNhanVien() == null) continue;
+
+            Integer maNV = l.getNhanVien().getMaNhanVien();
+
+            map.putIfAbsent(
+                    maNV,
+                    LichTrucTuanDTO.builder()
+                            .maNhanVien(maNV)
+                            .hoTen(l.getNhanVien().getTenNhanVien())
+                            .tenPhong(
+                                    l.getPhongVatLy() != null
+                                            ? l.getPhongVatLy().getTenPhong()
+                                            : null
+                            )
+                            .lichTheoNgay(new HashMap<>())
+                            .build()
+            );
+
+            map.get(maNV)
+                    .getLichTheoNgay()
+                    .put(
+                            l.getNgayTruc(),
+                            l.getCaLamViec() != null
+                                    ? l.getCaLamViec().getTenCa()
+                                    : l.getTrangThai()
+                    );
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    @Override
+    public List<LichTrucTuanDTO> getBangLichTuanTheoPhong(
+            Integer maPhong,
+            LocalDate start,
+            LocalDate end
+    ) {
+
+        List<LichTrucNgay> list =
+                lichRepo.findByMaPhongAndNgayTrucBetween(
+                        maPhong, start, end
+                );
+
+        Map<Integer, LichTrucTuanDTO> map = new LinkedHashMap<>();
+
+        for (LichTrucNgay l : list) {
+
+            if (l.getNhanVien() == null) continue;
+
+            Integer maNV = l.getMaNhanVien();
+
+            map.putIfAbsent(
+                    maNV,
+                    LichTrucTuanDTO.builder()
+                            .maNhanVien(maNV)
+                            .hoTen(l.getNhanVien().getTenNhanVien())
+                            .tenPhong(
+                                    l.getPhongVatLy() != null
+                                            ? l.getPhongVatLy().getTenPhong()
+                                            : null
+                            )
+                            .lichTheoNgay(new HashMap<>())
+                            .build()
+            );
+
+            map.get(maNV)
+                    .getLichTheoNgay()
+                    .put(
+                            l.getNgayTruc(),
+                            l.getCaLamViec() != null
+                                    ? l.getCaLamViec().getTenCa()
+                                    : l.getTrangThai()
+                    );
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
 
 }
