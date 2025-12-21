@@ -1,6 +1,7 @@
 package com.example.staffmanagementsystem.service.impl;
 
 import com.example.staffmanagementsystem.dto.PhongBanDTO;
+import com.example.staffmanagementsystem.entity.PhongBan;
 import com.example.staffmanagementsystem.repository.PhongBanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,8 @@ public class PhongBanServiceImpl implements PhongBanService {
                 .toList();
     }
 
-
+    @Override
+    public List<PhongBan> findAll() {
+        return repo.findAll();
+    }
 }
