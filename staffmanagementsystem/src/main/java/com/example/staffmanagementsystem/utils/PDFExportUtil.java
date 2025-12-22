@@ -1,8 +1,12 @@
 package com.example.staffmanagementsystem.utils;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -12,39 +16,39 @@ public class PDFExportUtil {
     public static byte[] exportLeaveReportPDF(List<Object[]> sheet1, List<Object[]> sheet2) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
-            // Document với lề nhỏ hơn để bảng rộng ra
-            Document document = new Document(PageSize.A4, 36, 36, 36, 36); // left,right,top,bottom
+            Document document = new Document(PageSize.A4, 36, 36, 36, 36);
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            // Font cho tiêu đề
-            Font titleFont = new Font(Font.HELVETICA, 16, Font.BOLD);
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
 
-            // Sheet 1: Tổng hợp nghỉ phép
             Paragraph title1 = new Paragraph("Tổng hợp nghỉ phép", titleFont);
-            title1.setSpacingAfter(20f); // cách 2 dòng tới bảng
+            title1.setSpacingAfter(20f);
             document.add(title1);
 
-            PdfPTable table1 = new PdfPTable(8); // 8 cột
-            table1.setWidthPercentage(100); // bảng chiếm toàn bộ chiều rộng
-            table1.setWidths(new float[]{2f, 3f, 2f, 1.5f, 1.5f, 2f, 1.5f, 1.5f}); // tăng cột Họ tên & Email
-            addTableHeader(table1, new String[]{"Họ tên","Email","Phòng ban","Nghỉ phép năm",
-                    "Nghỉ ốm","Nghỉ không lương vượt","Tổng ngày nghỉ","Số ngày còn lại"});
+            PdfPTable table1 = new PdfPTable(8);
+            table1.setWidthPercentage(100);
+            table1.setWidths(new float[]{2f, 3f, 2f, 1.5f, 1.5f, 2f, 1.5f, 1.5f});
+            addTableHeader(table1, new String[]{
+                    "Họ tên","Email","Phòng ban","Nghỉ phép năm",
+                    "Nghỉ ốm","Nghỉ không lương vượt","Tổng ngày nghỉ","Số ngày còn lại"
+            });
             addTableData(table1, sheet1);
             document.add(table1);
 
-            document.add(new Paragraph("\n")); // khoảng trắng
+            document.add(new Paragraph("\n"));
 
-            // Sheet 2: Chi tiết đơn nghỉ
             Paragraph title2 = new Paragraph("Chi tiết đơn nghỉ", titleFont);
             title2.setSpacingAfter(20f);
             document.add(title2);
 
-            PdfPTable table2 = new PdfPTable(9); // 9 cột
+            PdfPTable table2 = new PdfPTable(9);
             table2.setWidthPercentage(100);
-            table2.setWidths(new float[]{1.5f, 2f, 3f, 2f, 1.5f, 1.5f, 1.5f, 2f, 1.5f}); // Họ tên + Email rộng
-            addTableHeader(table2, new String[]{"Mã NV","Họ tên","Email","Phòng ban","Loại nghỉ",
-                    "Ngày bắt đầu","Ngày kết thúc","Lý do","Mã đơn"});
+            table2.setWidths(new float[]{1.5f, 2f, 3f, 2f, 1.5f, 1.5f, 1.5f, 2f, 1.5f});
+            addTableHeader(table2, new String[]{
+                    "Mã NV","Họ tên","Email","Phòng ban","Loại nghỉ",
+                    "Ngày bắt đầu","Ngày kết thúc","Lý do","Mã đơn"
+            });
             addTableData(table2, sheet2);
             document.add(table2);
 
@@ -57,14 +61,14 @@ public class PDFExportUtil {
     }
 
     private static void addTableHeader(PdfPTable table, String[] headers) {
-        Font headerFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+        Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
         for (String h : headers) {
             table.addCell(new Phrase(h, headerFont));
         }
     }
 
     private static void addTableData(PdfPTable table, List<Object[]> data) {
-        Font dataFont = new Font(Font.HELVETICA, 11, Font.NORMAL);
+        Font dataFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL);
         for (Object[] row : data) {
             for (Object cellData : row) {
                 table.addCell(new Phrase(cellData == null ? "" : cellData.toString(), dataFont));
@@ -72,3 +76,4 @@ public class PDFExportUtil {
         }
     }
 }
+
