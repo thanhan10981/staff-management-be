@@ -1,6 +1,7 @@
 package com.example.staffmanagementsystem.service.impl;
 
 import com.example.staffmanagementsystem.dto.AuditLogDTO;
+import com.example.staffmanagementsystem.dto.AuditLogResponseDTO;
 import com.example.staffmanagementsystem.entity.AuditLog;
 import com.example.staffmanagementsystem.entity.NhanVien;
 import com.example.staffmanagementsystem.repository.AuditLogRepository;
@@ -18,6 +19,7 @@ public class AuditLogServiceImpl implements AuditLogService {
 
     private final AuditLogRepository auditRepo;
     private final NhanVienRepository nhanVienRepo;
+    private final AuditLogRepository auditLogRepository;
 
     @Override
     public List<AuditLogDTO> getLogsByEmployee(Integer maNV) {
@@ -39,5 +41,10 @@ public class AuditLogServiceImpl implements AuditLogService {
     @Override
     public List<AuditLog> getRecentActivities() {
         return auditRepo.findTop10ByOrderByThoiGianDesc();
+    }
+
+    @Override
+    public List<AuditLogResponseDTO> getAllLogs() {
+        return auditLogRepository.findAllLogs();
     }
 }
