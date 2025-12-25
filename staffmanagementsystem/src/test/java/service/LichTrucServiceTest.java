@@ -1,4 +1,4 @@
-package com.example.staffmanagementsystem.service;
+package service;
 
 import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
 import com.example.staffmanagementsystem.entity.LichTrucNgay;

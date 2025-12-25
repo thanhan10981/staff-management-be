@@ -1,4 +1,4 @@
-package com.example.staffmanagementsystem.service;
+package service;
 import com.example.staffmanagementsystem.dto.AuditLogResponseDTO;
 import com.example.staffmanagementsystem.entity.AuditLog;
 import com.example.staffmanagementsystem.repository.AuditLogRepository;

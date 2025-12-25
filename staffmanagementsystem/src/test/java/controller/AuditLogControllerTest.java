@@ -1,4 +1,4 @@
-package com.example.staffmanagementsystem.controller;
+package controller;
 
 import com.example.staffmanagementsystem.service.AuditLogService;
 import com.example.staffmanagementsystem.utils.JwtTokenUtil;
