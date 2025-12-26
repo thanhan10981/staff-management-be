@@ -8,8 +8,11 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface LichTrucNgayRepository extends JpaRepository<LichTrucNgay, Integer> {
+
+    Optional<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTruc(Integer maNhanVien, LocalDate ngayTruc);
 
     List<LichTrucNgay> findByNgayTruc(LocalDate date);
 
@@ -21,19 +24,13 @@ public interface LichTrucNgayRepository extends JpaRepository<LichTrucNgay, Inte
 
     List<LichTrucNgay> findByMaPhongAndMaCaAndNgayTruc(Integer maPhong, Integer maCa, LocalDate date);
 
-    // CŨ – giữ nguyên
     List<LichTrucNgay> findByPhongVatLy_Khoa_IdAndNgayTrucBetween(
             Integer id,
             LocalDate start,
             LocalDate end
     );
 
-    // ⭐ MỚI – BẮT BUỘC PHẢI CÓ
-    List<LichTrucNgay> findByNhanVien_Khoa_IdAndNgayTrucBetween(
-            Integer maKhoa,
-            LocalDate start,
-            LocalDate end
-    );
+    List<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTrucBetween(Integer maNV, LocalDate start, LocalDate end);
 
     @Query("""
         SELECT l.maCa AS ca, COUNT(l) AS soNguoi
@@ -50,10 +47,9 @@ public interface LichTrucNgayRepository extends JpaRepository<LichTrucNgay, Inte
 
     boolean existsByNhanVien_MaNhanVienAndNgayTruc(Integer maNV, LocalDate date);
 
-    List<LichTrucNgay> findByNhanVien_MaNhanVienAndNgayTrucBetween(
-            Integer maNhanVien,
+    List<LichTrucNgay> findByNhanVien_Khoa_IdAndNgayTrucBetween(
+            Integer maKhoa,
             LocalDate start,
             LocalDate end
     );
-
 }
