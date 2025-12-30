@@ -14,8 +14,8 @@ public interface DonNghiPhepRepository extends JpaRepository<DonNghiPhep, Intege
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM DonNghiPhep t WHERE t.nhanVien.maNhanVien = :id")
-    void deleteByNhanVienId(@Param("id") Integer id);
+    @Query("DELETE FROM DonNghiPhep d WHERE d.nhanVien.maNhanVien = :nhanVienId")
+    void deleteByNhanVienId(@Param("nhanVienId") Integer nhanVienId);
 
     // SỬA CHÍNH TẠI ĐÂY: dùng nhanVien.maNhanVien thay vì maNhanVien trực tiếp
     List<DonNghiPhep> findByNhanVien_MaNhanVienAndNgayBatDauBetween(Integer empId, LocalDate fromDate, LocalDate toDate);
