@@ -15,7 +15,6 @@ public class AuditLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MaLog")
     private Integer maLog;
 
     @Column(name = "NguoiThucHien")
@@ -30,9 +29,9 @@ public class AuditLog {
     @Column(name = "MoTa", columnDefinition = "NVARCHAR(MAX)")
     private String moTa;
 
-    @Column(name = "TrangThai", columnDefinition = "NVARCHAR(50)")
-    private String trangThai;
-
     @Column(name = "MaNhanVien")
     private Integer maNhanVien;
+
+    @Column(name = "TrangThai", columnDefinition = "NVARCHAR(20)")
+    private String trangThai;
 }
