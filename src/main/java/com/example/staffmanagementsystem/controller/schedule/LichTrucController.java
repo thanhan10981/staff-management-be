@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @RestController
 @RequestMapping("/api/lichtruc")
@@ -142,5 +144,26 @@ public class LichTrucController {
                 "xungDot", xungDot
         ));
     }
+
+    // ===== LỊCH TUẦN THEO KHOA =====
+    @GetMapping("/tuan/khoa/{maKhoa}")
+    public List<LichTrucTuanDTO> getTheoKhoa(
+            @PathVariable Integer maKhoa,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+        return lichTrucService.getBangLichTuanTheoKhoa(maKhoa, from, to);
+    }
+
+    // ===== LỊCH TUẦN THEO PHÒNG =====
+    @GetMapping("/tuan/phong/{maPhong}")
+    public List<LichTrucTuanDTO> getTheoPhong(
+            @PathVariable Integer maPhong,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+        return lichTrucService.getBangLichTuanTheoPhong(maPhong, from, to);
+    }
+
 
 }

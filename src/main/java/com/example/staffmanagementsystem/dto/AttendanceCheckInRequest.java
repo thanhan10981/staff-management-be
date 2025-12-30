@@ -10,7 +10,9 @@ public class AttendanceCheckInRequest {
 
     private Long maChamCong;
     private Integer maLichTruc;
-    private String maQR;
+    // AttendanceCheckInRequest
+    private Integer maQR;
+
     private LocalDateTime thoiGianVao;
     private LocalDateTime thoiGianRa;
     private String trangThai;

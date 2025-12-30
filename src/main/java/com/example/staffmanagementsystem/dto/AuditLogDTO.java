@@ -12,4 +12,5 @@ public class AuditLogDTO {
     private String moTa;
     private LocalDateTime thoiGian;
     private String tenNguoiThucHien;
+    private String trangThai;
 }
