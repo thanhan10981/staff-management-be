@@ -1,5 +1,6 @@
 package com.example.staffmanagementsystem.repository;
 
+import com.example.staffmanagementsystem.dto.EmployeeOption;
 import com.example.staffmanagementsystem.dto.QuyLuongPhongBanDto;
 import com.example.staffmanagementsystem.entity.NhanVien;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,6 +43,17 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
     Long countNhanVienDenThang(
             @Param("month") int month,
             @Param("year") int year
+    );
+
+    @Query("""
+        SELECT 
+            nv.maNhanVien AS maNhanVien,
+            nv.tenNhanVien AS tenNhanVien
+        FROM NhanVien nv
+        WHERE nv.maNhanVien <> :maNhanVien
+    """)
+    List<EmployeeOption> findNhanVienMuonDoi(
+            @Param("maNhanVien") Integer maNhanVien
     );
 
 }
