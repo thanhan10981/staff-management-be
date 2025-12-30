@@ -1,6 +1,7 @@
 package com.example.staffmanagementsystem.service;
 
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
+import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,5 +42,17 @@ public interface LichTrucService {
 
     long tinhCaThieuNguoi(List<LichTrucNgayDTO> shifts);
     long tinhCaXungDot(List<LichTrucNgayDTO> shifts);
+    // lấy lịch tuần theo khoa
+    List<LichTrucTuanDTO> getBangLichTuanTheoKhoa(
+            Integer maKhoa,
+            LocalDate start,
+            LocalDate end
+    );
+    // lấy lịch tuần theo phòng
+    List<LichTrucTuanDTO> getBangLichTuanTheoPhong(
+            Integer maPhong,
+            LocalDate start,
+            LocalDate end
+    );
 
 }

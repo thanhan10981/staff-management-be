@@ -31,4 +31,7 @@ public class AuditLog {
 
     @Column(name = "MaNhanVien")
     private Integer maNhanVien;
+
+    @Column(name = "TrangThai", columnDefinition = "NVARCHAR(20)")
+    private String trangThai;
 }
