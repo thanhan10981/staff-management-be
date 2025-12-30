@@ -12,21 +12,34 @@ import java.util.List;
 
 public interface DonNghiPhepRepository extends JpaRepository<DonNghiPhep, Integer> {
 
+    // =====================================================
+    //  DELETE THEO NHÂN VIÊN
+    //  DÙNG CHUNG CHO TẤT CẢ CÁC MÀN
+    // =====================================================
     @Modifying
     @Transactional
-    @Query("DELETE FROM DonNghiPhep t WHERE t.nhanVien.maNhanVien = :id")
-    void deleteByNhanVienId(@Param("id") Integer id);
+    @Query("DELETE FROM DonNghiPhep d WHERE d.nhanVien.maNhanVien = :nhanVienId")
+    void deleteByNhanVienId(@Param("nhanVienId") Integer nhanVienId);
 
-    // SỬA CHÍNH TẠI ĐÂY: dùng nhanVien.maNhanVien thay vì maNhanVien trực tiếp
-    List<DonNghiPhep> findByNhanVien_MaNhanVienAndNgayBatDauBetween(Integer empId, LocalDate fromDate, LocalDate toDate);
+    // =====================================================
+    //  LẤY ĐƠN NGHỈ THEO NHÂN VIÊN + KHOẢNG NGÀY
+    //  (TRANG KHÁC TRONG HỆ THỐNG)
+    // =====================================================
+    List<DonNghiPhep> findByNhanVien_MaNhanVienAndNgayBatDauBetween(
+            Integer empId,
+            LocalDate fromDate,
+            LocalDate toDate
+    );
 
-    // HOẶC CÁCH AN TOÀN NHẤT (khuyến nghị để không lỗi nữa):
-    /*
-    @Query("SELECT d FROM DonNghiPhep d " +
-           "WHERE d.nhanVien.maNhanVien = :empId " +
-           "AND d.ngayBatDau BETWEEN :fromDate AND :toDate")
-    List<DonNghiPhep> findByMaNhanVienAndNgayBatDauBetween(@Param("empId") Integer empId,
-                                                           @Param("fromDate") LocalDate fromDate,
-                                                           @Param("toDate") LocalDate toDate);
-    */
+    // =====================================================
+    //  SEARCH (TRANG CỦA BẠN)
+    // =====================================================
+    @Query("""
+        SELECT d FROM DonNghiPhep d
+        WHERE LOWER(d.lyDo) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR LOWER(d.loaiNghi) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR CAST(d.nhanVien.maNhanVien AS string) LIKE CONCAT('%', :keyword, '%')
+    """)
+    List<DonNghiPhep> search(@Param("keyword") String keyword);
+
 }

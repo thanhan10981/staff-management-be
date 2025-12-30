@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "ChamCong")
 @Getter
@@ -22,15 +21,9 @@ public class AttendanceRecord {
     @JoinColumn(name = "MaLichTruc")
     private LichTrucNgay lichTrucNgay;
 
-    // TẠM THỜI COMMENT HOẶC XÓA QUAN HỆ NÀY ĐỂ KHẮC PHỤC LỖI
-    // Nếu sau này cần QR, bạn tạo entity AttendanceQrToken với @Id Integer
-    // @ManyToOne
-    // @JoinColumn(name = "MaQR")
-    // private AttendanceQrToken qrToken;
-
-    // Thay bằng kiểu đơn giản nếu cần lưu MaQR
+    // 🔥 FIX Ở ĐÂY
     @Column(name = "MaQR")
-    private String maQR;  // ← int thay vì relation
+    private Integer maQR;   // ❗ String → Integer
 
     @Column(name = "ThoiGianVao")
     private LocalDateTime checkInTime;
@@ -44,7 +37,6 @@ public class AttendanceRecord {
     @Column(name = "ThietBi", length = 100)
     private String deviceInfo;
 
-    // MaNV là nvarchar → dùng String
     @Column(name = "MaNV", length = 50, nullable = true)
     private String maNV;
 

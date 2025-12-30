@@ -1,6 +1,7 @@
 package com.example.staffmanagementsystem.service.impl;
 
 import com.example.staffmanagementsystem.dto.AuditLogDTO;
+import com.example.staffmanagementsystem.dto.AuditLogResponseDTO;
 import com.example.staffmanagementsystem.entity.AuditLog;
 import com.example.staffmanagementsystem.entity.NhanVien;
 import com.example.staffmanagementsystem.repository.AuditLogRepository;
@@ -9,6 +10,7 @@ import com.example.staffmanagementsystem.service.AuditLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,7 @@ public class AuditLogServiceImpl implements AuditLogService {
 
     private final AuditLogRepository auditRepo;
     private final NhanVienRepository nhanVienRepo;
+    private final AuditLogRepository auditLogRepository;
 
     @Override
     public List<AuditLogDTO> getLogsByEmployee(Integer maNV) {
@@ -31,7 +34,8 @@ public class AuditLogServiceImpl implements AuditLogService {
                     log.getHanhDong(),
                     log.getMoTa(),
                     log.getThoiGian(),
-                    nv != null ? nv.getTenNhanVien() : "Hệ thống"
+                    nv != null ? nv.getTenNhanVien() : "Hệ thống",
+                    log.getTrangThai()
             );
         }).collect(Collectors.toList());
     }
@@ -39,5 +43,60 @@ public class AuditLogServiceImpl implements AuditLogService {
     @Override
     public List<AuditLog> getRecentActivities() {
         return auditRepo.findTop10ByOrderByThoiGianDesc();
+    }
+
+
+    @Override
+    public void logLogin(Integer maNguoiDung,
+                         Integer maNhanVien,
+                         String tenDangNhap) {
+
+        AuditLog log = AuditLog.builder()
+                .nguoiThucHien(maNguoiDung)
+                .maNhanVien(maNhanVien)
+                .hanhDong("LOGIN")
+                .moTa("User " + tenDangNhap + " đăng nhập thành công")
+                .trangThai("ThanhCong")
+                .thoiGian(LocalDateTime.now())
+                .build();
+
+        auditRepo.save(log);
+    }
+
+    @Override
+    public void logLoginFail(String tenDangNhap) {
+
+        AuditLog log = AuditLog.builder()
+                .hanhDong("LOGIN")
+                .moTa("User " + tenDangNhap + " đăng nhập thất bại")
+                .trangThai("ThatBai")     // ⭐ NEW
+                .thoiGian(LocalDateTime.now())
+                .build();
+
+        auditRepo.save(log);
+    }
+
+    @Override
+    public void logUpdateProfile(
+            Integer maNguoiDung,
+            Integer maNhanVien,
+            String moTa,
+            String trangThai
+    ) {
+        AuditLog log = AuditLog.builder()
+                .nguoiThucHien(maNguoiDung)
+                .maNhanVien(maNhanVien)
+                .hanhDong("UPDATE_PROFILE")
+                .moTa(moTa)
+                .thoiGian(LocalDateTime.now())
+                .trangThai(trangThai)
+                .build();
+
+        auditRepo.save(log);
+    }
+
+    @Override
+    public List<AuditLogResponseDTO> getAllLogs() {
+        return auditLogRepository.findAllLogs();
     }
 }

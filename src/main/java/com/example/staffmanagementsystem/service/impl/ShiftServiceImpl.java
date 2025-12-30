@@ -68,7 +68,7 @@ public class ShiftServiceImpl implements ShiftService {
         var nv = nhanVienRepo.findById(maNV)
                 .orElseThrow(() -> new IllegalArgumentException("NV không tồn tại"));
 
-        List<LichTrucNgayDTO> result = new java.util.ArrayList<>();
+        List<LichTrucNgayDTO> result = new ArrayList<>();
 
         for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
 
