@@ -1,6 +1,8 @@
 package com.example.staffmanagementsystem.repository;
 
 import com.example.staffmanagementsystem.dto.profile.*;
+import com.example.staffmanagementsystem.dto.EmployeeOption;
+import com.example.staffmanagementsystem.dto.QuyLuongPhongBanDto;
 import com.example.staffmanagementsystem.entity.NhanVien;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -101,6 +103,17 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
     WHERE nv.maNhanVien = :maNhanVien
 """)
     ThongTinNhanVienFormDto getThongTinForm(
+            @Param("maNhanVien") Integer maNhanVien
+    );
+
+    @Query("""
+        SELECT 
+            nv.maNhanVien AS maNhanVien,
+            nv.tenNhanVien AS tenNhanVien
+        FROM NhanVien nv
+        WHERE nv.maNhanVien <> :maNhanVien
+    """)
+    List<EmployeeOption> findNhanVienMuonDoi(
             @Param("maNhanVien") Integer maNhanVien
     );
 
