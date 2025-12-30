@@ -26,6 +26,7 @@ public interface LuongThangRepository extends JpaRepository<LuongThang, Integer>
     List<LuongThang> findByMonthYear(@Param("month") int month, @Param("year") int year);
     Optional<LuongThang> findByNhanVien_MaNhanVienAndThangAndNam(
             Integer maNhanVien, Integer thang, Integer nam);
+
     @Query("""
     SELECT lt FROM LuongThang lt
     WHERE (:dept IS NULL OR :dept = 0 OR lt.nhanVien.khoa.id = :dept)
