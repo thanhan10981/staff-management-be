@@ -2,6 +2,7 @@ package com.example.staffmanagementsystem.controller;
 
 import com.example.staffmanagementsystem.dto.PhongBanDTO;
 import com.example.staffmanagementsystem.entity.PhongBan;
+import com.example.staffmanagementsystem.entity.ViTriCongViec;
 import com.example.staffmanagementsystem.service.impl.PhongBanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,9 @@ public class PhongBanController {
     ) {
         return ResponseEntity.ok(phongBanService.getPhongBanTheoKhoa(maKhoa));
     }
+
     @GetMapping
-    public List<PhongBan> getAllPhongBan() {
+    public List<PhongBan> getAll() {
         return phongBanService.findAll();
     }
 }

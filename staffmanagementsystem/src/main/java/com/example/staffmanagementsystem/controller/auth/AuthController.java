@@ -2,6 +2,7 @@ package com.example.staffmanagementsystem.controller.auth;
 
 import com.example.staffmanagementsystem.dto.auth.LoginRequest;
 import com.example.staffmanagementsystem.dto.auth.LoginResponse;
+import com.example.staffmanagementsystem.service.AuditLogService;
 import com.example.staffmanagementsystem.utils.JwtTokenUtil;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -23,13 +24,19 @@ public class AuthController {
     private final JwtTokenUtil jwtUtil;
     private final UserDetailsService userDetailsService;
     private final NguoiDungRepository nguoiDungRepo;
+    private final AuditLogService auditLogService;
 
 
-    public AuthController(AuthenticationManager authManager, JwtTokenUtil jwtUtil, UserDetailsService userDetailsService, NguoiDungRepository nguoiDungRepo) {
+    public AuthController(AuthenticationManager authManager,
+                          JwtTokenUtil jwtUtil,
+                          UserDetailsService userDetailsService,
+                          NguoiDungRepository nguoiDungRepo,
+                          AuditLogService auditLogService) {
         this.authManager = authManager;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.nguoiDungRepo = nguoiDungRepo;
+        this.auditLogService = auditLogService;
     }
 
     @PostMapping("/login")
@@ -45,6 +52,11 @@ public class AuthController {
             NguoiDung user = nguoiDungRepo.findByTenDangNhap(req.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
+            auditLogService.logLogin(
+                    user.getMaNguoiDung(),
+                    user.getMaNhanVien(),
+                    user.getTenDangNhap()
+            );
             // ⭐ Generate token kèm userId
             String token = jwtUtil.generateToken(user, userDetails);
 
@@ -56,9 +68,13 @@ public class AuthController {
             return ResponseEntity.ok(new LoginResponse(token, roles));
 
         } catch (BadCredentialsException ex) {
+
+            auditLogService.logLoginFail(req.getUsername());
+
             return ResponseEntity.status(401)
                     .body(Map.of("error", "Invalid credentials"));
         }
+
     }
 
 
