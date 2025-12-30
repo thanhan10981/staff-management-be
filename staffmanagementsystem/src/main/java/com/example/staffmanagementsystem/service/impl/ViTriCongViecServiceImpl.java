@@ -1,5 +1,6 @@
 package com.example.staffmanagementsystem.service.impl;
 
+import com.example.staffmanagementsystem.dto.ViTriCongViecDTO;
 import com.example.staffmanagementsystem.entity.ViTriCongViec;
 import com.example.staffmanagementsystem.repository.ViTriCongViecRepository;
 import com.example.staffmanagementsystem.service.ViTriCongViecService;
@@ -17,5 +18,10 @@ public class ViTriCongViecServiceImpl implements ViTriCongViecService {
     @Override
     public List<ViTriCongViec> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<ViTriCongViecDTO> getViTriTheoPhongBan(Integer maPhongBan) {
+        return repository.findByMaPhongBan(maPhongBan);
     }
 }

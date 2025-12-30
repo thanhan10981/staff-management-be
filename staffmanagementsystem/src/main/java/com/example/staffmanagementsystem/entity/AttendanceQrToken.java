@@ -15,23 +15,22 @@ public class AttendanceQrToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MaQR")
-    private Long id;
+    private Integer maQR;   // ❗ Long → Integer
 
-    @Column(name = "MaNhanVien", nullable = false)
-    private Long employeeId; // map MaNhanVien
+    // ===== FK giống QRChamCong =====
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MaNhanVien", nullable = false)
+    private NhanVien nhanVien;   // ❗ Long → Entity
 
     @Column(name = "NgayTao", nullable = false)
-    private LocalDate createdAt; // dùng LocalDate cho NgayTao
+    private LocalDate ngayTao;
 
     @Column(name = "MaQRCode", nullable = false, length = 255)
-    private String token; // map MaQRCode làm token
+    private String maQRCode;
 
     @Column(name = "TrangThai", length = 20)
-    private String status;
+    private String trangThai;
 
-    // ExpiredAt tính từ NgayTao + 1 ngày (không có cột, tính runtime)
     @Transient
     private LocalDateTime expiredAt;
-
-    // getters/setters full
 }
