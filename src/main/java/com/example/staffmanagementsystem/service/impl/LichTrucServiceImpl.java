@@ -1,6 +1,7 @@
 package com.example.staffmanagementsystem.service.impl;
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
 import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
+import com.example.staffmanagementsystem.dto.schedule.LichTrucFilterDTO;
 import com.example.staffmanagementsystem.entity.*;
 import com.example.staffmanagementsystem.mapper.LichTrucNgayMapper;
 import com.example.staffmanagementsystem.repository.*;
@@ -385,6 +386,23 @@ public class LichTrucServiceImpl implements LichTrucService {
         }
 
         return new ArrayList<>(map.values());
+    }
+
+    @Override
+    public List<LichTrucNgayDTO> filterLichTruc(LichTrucFilterDTO f) {
+
+        List<LichTrucNgay> list = lichRepo.filterLichTruc(
+                f.getMaKhoa(),
+                f.getMaPhong(),
+                f.getMaViTri(),
+                f.getMaNhanVien(),
+                f.getFrom(),
+                f.getTo()
+        );
+
+        return list.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 }

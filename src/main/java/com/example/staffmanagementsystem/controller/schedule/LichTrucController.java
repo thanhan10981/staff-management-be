@@ -1,5 +1,6 @@
 package com.example.staffmanagementsystem.controller.schedule;
 import com.example.staffmanagementsystem.dto.PhanCongCaTrucDTO;
+import com.example.staffmanagementsystem.dto.schedule.LichTrucFilterDTO;
 import com.example.staffmanagementsystem.service.schedule.ShiftService;
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
 import com.example.staffmanagementsystem.service.LichTrucService;
@@ -165,5 +166,9 @@ public class LichTrucController {
         return lichTrucService.getBangLichTuanTheoPhong(maPhong, from, to);
     }
 
+    @PostMapping("/filter")
+    public List<LichTrucNgayDTO> filter(@RequestBody LichTrucFilterDTO filter) {
+        return lichTrucService.filterLichTruc(filter);
+    }
 
 }

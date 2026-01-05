@@ -43,6 +43,13 @@ public class ShiftServiceImpl implements ShiftService {
         var nv = nhanVienRepo.findById(dto.getMaNhanVien())
                 .orElseThrow(() -> new IllegalArgumentException("Nhân viên không tồn tại"));
 
+        // ✅ CHECK XUNG ĐỘT
+        checkConflict(
+                dto.getMaNhanVien(),
+                dto.getMaCa(),
+                dto.getNgayTruc()
+        );
+
         LichTrucNgay e = LichTrucNgay.builder()
                 .nhanVien(nv)
                 .maCa(dto.getMaCa())
@@ -55,6 +62,7 @@ public class ShiftServiceImpl implements ShiftService {
         lichRepo.save(e);
         return mapper.toDTO(e);
     }
+
 
     @Override
     public List<LichTrucNgayDTO> createPhanCongAndGenerateLich(PhanCongCaTrucDTO dto) {
@@ -71,6 +79,9 @@ public class ShiftServiceImpl implements ShiftService {
         List<LichTrucNgayDTO> result = new ArrayList<>();
 
         for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
+
+            // ✅ CHECK XUNG ĐỘT MỖI NGÀY
+            checkConflict(maNV, maCa, d);
 
             LichTrucNgay e = LichTrucNgay.builder()
                     .nhanVien(nv)
@@ -172,5 +183,33 @@ public class ShiftServiceImpl implements ShiftService {
 
                 .build();
     }
+
+    private void checkConflict(
+            Integer maNhanVien,
+            Integer maCa,
+            LocalDate ngayTruc
+    ) {
+        if (lichRepo.existsByNhanVien_MaNhanVienAndMaCaAndNgayTruc(
+                maNhanVien, maCa, ngayTruc
+        )) {
+            LichTrucNgay existed = lichRepo
+                    .findFirstByNhanVien_MaNhanVienAndMaCaAndNgayTruc(
+                            maNhanVien, maCa, ngayTruc
+                    )
+                    .orElseThrow();
+
+            String tenNV = existed.getNhanVien().getTenNhanVien();
+
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Nhân viên %s đã có ca làm trong khung giờ này ngày %s. Vui lòng chọn ca hoặc nhân viên khác.",
+                            tenNV,
+                            ngayTruc
+                    )
+            );
+        }
+    }
+
+
 
 }

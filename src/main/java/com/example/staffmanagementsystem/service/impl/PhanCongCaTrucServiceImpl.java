@@ -77,10 +77,12 @@ public class PhanCongCaTrucServiceImpl implements PhanCongCaTrucService {
         for (Integer maNV : dto.getDanhSachNhanVien()) {
 
             NhanVien nv = nvRepo.findById(maNV)
-                    .orElseThrow(() -> new RuntimeException("Không tồn tại nhân viên ID = " + maNV));
+                    .orElseThrow(() ->
+                            new IllegalArgumentException("Không tồn tại nhân viên ID = " + maNV)
+                    );
 
             // ============================
-            // 1. TẠO PHÂN CÔNG CA TRỰC
+            // 1. TẠO PHÂN CÔNG
             // ============================
             PhanCongCaTruc pc = PhanCongCaTruc.builder()
                     .nhanVien(nv)
@@ -92,32 +94,31 @@ public class PhanCongCaTrucServiceImpl implements PhanCongCaTrucService {
                     .ghiChu(dto.getGhiChu())
                     .nguoiTao(dto.getNguoiTao())
                     .trangThai("ACTIVE")
-                    .lapLaiHangTuan(0)  // mặc định
+                    .lapLaiHangTuan(0)
                     .build();
 
             repo.save(pc);
 
             // ============================
-            // 2. SINH LỊCH THEO NGÀY
+            // 2. SINH LỊCH NGÀY + CHECK TRÙNG
             // ============================
             LocalDate d = dto.getNgayBatDau();
             while (!d.isAfter(dto.getNgayKetThuc())) {
 
-                // Check trùng lịch
-                if (!lichRepo.existsByNhanVien_MaNhanVienAndNgayTruc(maNV, d)) {
+                // ✅ CHECK CONFLICT (QUAN TRỌNG)
+                checkConflict(maNV, dto.getMaCa(), d);
 
-                    LichTrucNgay lich = LichTrucNgay.builder()
-                            .nhanVien(nv)
-                            .maCa(dto.getMaCa())
-                            .maPhong(dto.getMaPhong())
-                            .ngayTruc(d)
-                            .trangThai("SCHEDULED")
-                            .ghiChu(dto.getGhiChu())
-                            .build();
+                LichTrucNgay lich = LichTrucNgay.builder()
+                        .nhanVien(nv)
+                        .maCa(dto.getMaCa())
+                        .maPhong(dto.getMaPhong())
+                        .ngayTruc(d)
+                        .trangThai("SCHEDULED")
+                        .ghiChu(dto.getGhiChu())
+                        .build();
 
-                    lichRepo.save(lich);
-                    result.add(lich);
-                }
+                lichRepo.save(lich);
+                result.add(lich);
 
                 d = d.plusDays(1);
             }
@@ -125,4 +126,34 @@ public class PhanCongCaTrucServiceImpl implements PhanCongCaTrucService {
 
         return result;
     }
+
+
+    private void checkConflict(
+            Integer maNhanVien,
+            Integer maCa,
+            LocalDate ngayTruc
+    ) {
+        if (lichRepo.existsByNhanVien_MaNhanVienAndMaCaAndNgayTruc(
+                maNhanVien, maCa, ngayTruc
+        )) {
+
+            LichTrucNgay existed = lichRepo
+                    .findFirstByNhanVien_MaNhanVienAndMaCaAndNgayTruc(
+                            maNhanVien, maCa, ngayTruc
+                    )
+                    .orElseThrow();
+
+            String tenNV = existed.getNhanVien().getTenNhanVien();
+
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Nhân viên %s đã có ca %d vào ngày %s. Vui lòng chọn ca hoặc nhân viên khác.",
+                            tenNV,
+                            maCa,
+                            ngayTruc
+                    )
+            );
+        }
+    }
+
 }

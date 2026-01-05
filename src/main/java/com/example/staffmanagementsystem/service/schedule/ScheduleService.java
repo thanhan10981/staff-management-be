@@ -11,4 +11,9 @@ public interface ScheduleService {
             LocalDate ngayTruc,
             Integer maKhoa
     );
+
+
+    byte[] exportMonthlyPdf(Integer maKhoa, int year, int month);
+
+
 }

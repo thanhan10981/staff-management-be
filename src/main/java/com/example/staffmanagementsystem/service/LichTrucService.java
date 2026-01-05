@@ -2,6 +2,7 @@ package com.example.staffmanagementsystem.service;
 
 import com.example.staffmanagementsystem.dto.LichTrucNgayDTO;
 import com.example.staffmanagementsystem.dto.LichTrucTuanDTO;
+import com.example.staffmanagementsystem.dto.schedule.LichTrucFilterDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,5 +55,7 @@ public interface LichTrucService {
             LocalDate start,
             LocalDate end
     );
+
+    List<LichTrucNgayDTO> filterLichTruc(LichTrucFilterDTO filter);
 
 }

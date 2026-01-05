@@ -16,4 +16,5 @@ public interface PhanCongCaTrucRepository extends JpaRepository<PhanCongCaTruc, 
     List<PhanCongCaTruc> findByMaKhoa(Integer maKhoa);
     List<PhanCongCaTruc> findByNhanVien_MaNhanVien(Integer maNhanVien);
 
+
 }
